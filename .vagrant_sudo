@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# Ask for the administrator password upfront
+sudo -v
+
+# see http://docs.vagrantup.com/v2/synced-folders/nfs.html
+VAGRANT_COMMANDS='
+# Vagrant commands
+Cmnd_Alias VAGRANT_EXPORTS_ADD = /usr/bin/tee -a /etc/exports
+Cmnd_Alias VAGRANT_NFSD = /sbin/nfsd restart
+Cmnd_Alias VAGRANT_EXPORTS_REMOVE = /usr/bin/sed -E -e /*/ d -ibak /etc/exports
+%admin ALL=(root) NOPASSWD: VAGRANT_EXPORTS_ADD, VAGRANT_NFSD, VAGRANT_EXPORTS_REMOVE
+'
+
+if [ -e /etc/sudoers.tmp ]; then
+  echo "/etc/sudoers busy (tmp file exists), try again later or delete tmp file"
+  exit 1
+fi
+
+if sudo grep -q '# Vagrant commands' /etc/sudoers ; then
+	echo "Vagrant commands already written to sudoers!"
+	exit 1
+fi
+
+sudo cp /etc/sudoers /etc/sudoers.bak
+sudo cp /etc/sudoers /etc/sudoers.tmp
+
+sudo chmod 0640 /etc/sudoers.tmp
+
+echo "Appending to /etc/sudoers.tmp:"
+echo "$VAGRANT_COMMANDS" | sudo tee -a /etc/sudoers.tmp
+
+if ! sudo visudo -c -f /etc/sudoers.tmp ; then
+	echo "Rolling back changes!"
+	sudo rm /etc/sudoers.tmp
+	exit 1
+fi
+
+echo "Writing /etc/sudoers"
+sudo chmod 0440 /etc/sudoers.tmp
+sudo mv /etc/sudoers.tmp /etc/sudoers
+exit 0
