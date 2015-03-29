@@ -13,8 +13,8 @@ Cmnd_Alias VAGRANT_EXPORTS_REMOVE = /usr/bin/sed -E -e /*/ d -ibak /etc/exports
 '
 
 if [ -e /etc/sudoers.tmp ]; then 
-  echo "/etc/sudoers busy (tmp file exists), try again later or delete tmp file"
-  exit 1
+	echo "/etc/sudoers busy (tmp file exists), try again later or delete tmp file"
+	exit 1
 fi
 
 if sudo grep -q '# Vagrant commands' /etc/sudoers ; then
