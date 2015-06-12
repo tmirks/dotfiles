@@ -1,3 +1,13 @@
+# EditorConfig
+# See http://EditorConfig.org
+
+# STANDARDS REFERENCES
+# --------------------
+# Front-end: http://mdo.github.io/code-guide/
+# PHP: http://www.php-fig.org/psr/psr-2/
+# Perl: http://perldoc.perl.org/perlstyle.html
+
+# top-most EditorConfig file
 root = true
 
 [*]
@@ -7,14 +17,44 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{php,yml,xml}]
+###################
+# Markup
+###################
+[{*.hbs,*.twig,*.htm,*.html}]
 indent_style = space
+indent_size = 2
 
+###################
+# Javascript
+###################
+[{*.js,*.json}]
+indent_style = space
+indent_size = 2
+
+###################
+# CSS
+###################
+[{*.css,*.scss}]
+indent_style = space
+indent_size = 2
+
+###################
+# PHP
+###################
 [*.php]
+indent_style = space
 indent_size = 4
 
+###################
+# YAML
+###################
 [*.yml]
+indent_style = space
 indent_size = 2
 
-[build.xml]
-indent_size = 2
+###################
+# PERL
+###################
+[*.pl]
+indent_style = space
+indent_size = 4
